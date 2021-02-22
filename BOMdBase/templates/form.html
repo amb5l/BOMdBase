@@ -1,0 +1,56 @@
+{% load widget_tweaks %}
+
+{% for hidden_field in form.hidden_fields %}
+  {{ hidden_field }}
+{% endfor %}
+
+{% if form.non_field_errors %}
+  <div class="alert alert-danger" role="alert">
+    {% for error in form.non_field_errors %}
+      {{ error }}
+    {% endfor %}
+  </div>
+{% endif %}
+
+{% for field in form.visible_fields %}
+  <div class="form-group">
+    {{ field.label_tag }}
+
+    {% if form.is_bound %}
+      {% if field.errors %}
+        <div class="mb-3">
+        {% if field.field.widget.input_type == 'checkbox' %}
+        {% render_field field class="form-check-input is-invalid" %}
+        {% else %}
+        {% render_field field class="form-control is-invalid" %}
+        {% endif %}
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="mb-3">
+        {% if field.field.widget.input_type == 'checkbox' %}
+        {% render_field field class="form-check-input is-valid" %}
+        {% else %}
+        {% render_field field class="form-control is-valid" %}
+        {% endif %}
+        </div>
+      {% endif %}
+    {% else %}
+      <div class="mb-3">
+      {% if field.field.widget.input_type == 'checkbox' %}
+      {% render_field field class="form-check-input" %}
+      {% else %}
+      {% render_field field class="form-control" %}
+      {% endif %}
+      </div>
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+{% endfor %}

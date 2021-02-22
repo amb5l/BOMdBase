@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<script>
+if (sessionStorage.getItem("refresh") == "true") {
+    sessionStorage.removeItem("refresh"); window.location.reload()
+}
+{% if resume %}sessionStorage.setItem("refresh", "true"){% endif %}
+</script>
+<html translate="no">
+  {% load static %}
+  <head>
+    <meta charset="utf-8">
+    <meta name="google" content="notranslate">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href={% static 'css/bootstrap.css' %}>
+    <link rel="stylesheet" href={% static 'css/BOMdBase.css' %}>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <title>BOMdBase{% if title %} - {% endif %}{{ title }}</title>
+  </head>
+  <body>
+    {% if navbar1 %}
+      <nav class="navbar navbar-expand-sm bg-dark">
+        <ul class="navbar-nav">
+          {% for name, link in navbar1 %}
+          <li class="nav-item">
+            <a class="nav-link" href="{{ link }}">
+            {{ name }}&nbsp;&nbsp;
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </nav>
+    {% endif %}
+    {% if navbar2 %}
+      <nav class="navbar navbar-expand-sm bg-light">
+        <ul class="navbar-nav">
+          {% for name, link in navbar2 %}
+          <li class="nav-item">
+            <a class="nav-link" href="{{ link }}">
+            {{ name }}&nbsp;&nbsp;
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </nav>
+    {% endif %}
+  <H1>{% if heading %}{{ heading }}{% elif title %}{{ title }}{% else %}BOMdBase{% endif %}</H1>
+  {% if subtitle %}<H2>{{ subtitle }}</H2>{% endif %}
+  {% if resume %}<button onclick="window.history.go(-{{ resume }});" class="btn btn-primary" type="button">Continue</button>{% endif %}
+  {% if notes %}<p>{% autoescape off %}{{ notes }}{% endautoescape %}</p>{% endif %}
+  <br>
+  {% if form %}
+  <form action="{{ form_action }}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% include 'form.html' with form=form %}
+    <div class="mb-3">
+    <button type="submit" class="btn btn-primary">Submit</button>
+    <button onclick="window.history.back();" class="btn btn-secondary" type="button">Cancel</button>
+    </div>
+  </form>
+  {% endif %}
+  {% autoescape off %}{{ table }}{% endautoescape %}
+  </body>
+</html>
