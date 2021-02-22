@@ -1,9 +1,15 @@
+import git
+
 from django.shortcuts import render
 
 from .shared import navbar1
 
 def main(request):
-    notes = 'Hello!'
+    repo = git.Repo()
+    tag = str(repo.tags[-1])
+    sha = repo.head.commit.hexsha
+    short_sha = repo.git.rev_parse(sha, short=6)
+    notes = 'Version: ' + tag + '('+ short_sha + ')'
     context = { \
         'navbar1': navbar1,
         'navbar2': [
