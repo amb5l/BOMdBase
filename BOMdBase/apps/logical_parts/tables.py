@@ -99,7 +99,7 @@ logical_parts_table = {
         ('spn',     'spn',     'supplier part',              '/supplier_parts#',                  'spid'                           ),
         ('spdesc',  'spdesc',  '',                           '',                                  None                             ),
         ('spunlk',  'spunlk',  'unlink supplier part',       '/manufacturer_part_links/break/?', {'mpid': 'mpid', 'spid': 'spid'}  ),
-        ('spedit',  'spedit',  'edit supplier part',         'supplier_parts/edit?',             {'spid': 'spid'}                  ),
+        ('spedit',  'spedit',  'edit supplier part',         '/supplier_parts/edit?',            {'spid': 'spid'}                  ),
         ('spout',   'spout',   'search supplier part',       '/supplier_parts/search?',          {'spid': 'spid'}                  )
     )
 }
