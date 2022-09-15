@@ -87,8 +87,6 @@ def bom_import_orcad(bom_name, file, create_parts, dry_run):
     l = get_next_line(reader)
     if not l:
         return 'file truncated after line ' + str(n)
-    if not ('LPN' in l and 'Ref' in l):
-        return logn('bad header')
     l = l.replace('Quantity', 'Qty')
     l = l.replace('References', 'Ref')
     l = l.replace('Reference', 'Ref')
@@ -96,10 +94,14 @@ def bom_import_orcad(bom_name, file, create_parts, dry_run):
     l = l.replace('Logical Part Number', 'LPN')
     l = l.replace('Logical Part', 'LPN')
     headers = l.split('\t')
-    if 'LPN' not in headers:
-        return logn('cannot proceed without logical part number (LPN)')
+    if 'Item' not in headers:
+        return logn('cannot proceed without item number')
     if 'Qty' not in headers:
         return logn('cannot proceed without quantity')
+    if 'LPN' not in headers:
+        return logn('cannot proceed without logical part number (LPN)')
+    if 'Ref' not in headers:
+        return logn('cannot proceed without part references')
     if len(set(headers)) != len(headers):
         return logn('found duplicate headers')
     for header in headers:
@@ -121,8 +123,8 @@ def bom_import_orcad(bom_name, file, create_parts, dry_run):
             return l[i] if len(l) > i else ''
         l = get_next_line(reader)
         row = l.split('\t')
-        next_lpn = getli(row, headers.index('LPN'))
-        if next_lpn or not l:
+        next_item = getli(row, headers.index('Item'))
+        if next_item or not l:
             if lpn:
                 if qty and refs:
                     if qty != len(refs):
@@ -138,15 +140,18 @@ def bom_import_orcad(bom_name, file, create_parts, dry_run):
             if not l:
                 break
             expected_item += 1
-            item = getli(row, headers.index('Item'))
-            if 'Item' in headers:
-                if item != str(expected_item):
-                    return logn('unexpected item number')
-            lpn = next_lpn
-            qty = int(getli(row, headers.index('Qty')))
+            item = next_item
+            if item != str(expected_item):
+                return logn('unexpected item number')
+            lpn = getli(row, headers.index('LPN'))
+            if not lpn:
+                return logn('logical part number is empty')
+            qty = getli(row, headers.index('Qty'))
+            if not qty:
+                return logn('quantity is empty')
+            qty = int(qty)
             refs = []
-        if 'Ref' in headers:
-            refs += [e for e in row[headers.index('Ref')].split(',') if e]
+        refs += [e for e in row[headers.index('Ref')].split(',') if e]
     log(str(item) + ' items processed OK')
     log('Checking for non-existent logical parts:')
     nonexistent = 0
