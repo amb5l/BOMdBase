@@ -133,7 +133,7 @@ def boms_interactive(request):
         'notes': bom.description,
         'navbar1': navbar1,
         'navbar2': [
-            ('printable', '/boms/printable/?' + request.GET.urlencode()),
+            ('printable', '/boms/printable/?printable&' + request.GET.urlencode()),
             ('export', '/boms/export/?' + request.GET.urlencode())
         ],
         'table': table,
