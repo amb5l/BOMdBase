@@ -56,7 +56,7 @@ The following instructions are for Windows users. A Windows setup batch file (se
 
 5. Install Python dependancies:
 
-     `(.venv) C:\utils\BOMdBase> python -m pip -r requirements.txt`
+     `(.venv) C:\utils\BOMdBase> python -m pip install -r requirements.txt`
 
 6. Initialise database:
 
