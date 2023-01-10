@@ -88,6 +88,7 @@ def bom_export_csv(request, sort_xref):
             row += ['', '']
         row.append(obj.references)
         rows.append(row)
+        item += 1
 
     # return CSV
     response = HttpResponse(content_type='text/csv')
